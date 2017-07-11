@@ -75,7 +75,6 @@ Plugin 'terryma/vim-multiple-cursors'
 Plugin 'klen/python-mode'
 Plugin 'mbbill/undotree'
 Plugin 'octol/vim-cpp-enhanced-highlight'
-Plugin 'myusuf3/numbers.vim'
 Plugin 'thaerkh/vim-workspace'
 call vundle#end()
 
@@ -210,5 +209,3 @@ if has("persistent_undo")
     set undodir=~/.undodir/
     set undofile
 endif
-nnoremap <F3> :NumbersToggle<CR>
-nnoremap <F4> :NumbersOnOff<CR>
