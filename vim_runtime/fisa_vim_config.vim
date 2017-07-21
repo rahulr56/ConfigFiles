@@ -33,8 +33,8 @@ call plug#begin('~/.vim/plugged')
 
 " Plugins from github repos:
 
-" Override configs by directory 
-Plug 'arielrossanigo/dir-configs-override.vim'
+" Override configs by directory
+" Plug 'arielrossanigo/dir-configs-override.vim'
 " Better file browser
 Plug 'scrooloose/nerdtree'
 " Code commenter
@@ -45,11 +45,11 @@ Plug 'majutsushi/tagbar'
 Plug 'ctrlpvim/ctrlp.vim'
 " Extension to ctrlp, for fuzzy command finder
 Plug 'fisadev/vim-ctrlp-cmdpalette'
-" Zen coding
-Plug 'mattn/emmet-vim'
+" Zen coding. Expands HTML tags with completions like ui>li*>span>a
+" Plug 'mattn/emmet-vim'
 " Git integration
-Plug 'motemen/git-vim'
-" Tab list panel
+" Plug 'motemen/git-vim'
+" Tab list panel - https://github.com/kien/tabman.vim
 Plug 'kien/tabman.vim'
 " Airline
 Plug 'vim-airline/vim-airline'
@@ -59,30 +59,30 @@ Plug 'fisadev/fisa-vim-colorscheme'
 " Consoles as buffers
 Plug 'rosenfeld/conque-term'
 " Pending tasks list
-Plug 'fisadev/FixedTaskList.vim'
+" Plug 'fisadev/FixedTaskList.vim'
 " Surround
-Plug 'tpope/vim-surround'
+" Plug 'tpope/vim-surround'
 " Autoclose
 Plug 'Townk/vim-autoclose'
-" Indent text object
-Plug 'michaeljsmith/vim-indent-object'
-" Indentation based movements
-Plug 'jeetsukumaran/vim-indentwise'
+" Indent text object - https://github.com/michaeljsmith/vim-indent-object/blob/master/doc/indent-object.txt
+" Plug 'michaeljsmith/vim-indent-object'
+" Indentation based movements - https://github.com/jeetsukumaran/vim-indentwise
+" Plug 'jeetsukumaran/vim-indentwise'
 " Python autocompletion, go to definition.
 Plug 'davidhalter/jedi-vim'
 " Better autocompletion
 Plug 'Shougo/neocomplcache.vim'
 " Snippets manager (SnipMate), dependencies, and snippets repo
-Plug 'MarcWeber/vim-addon-mw-utils'
-Plug 'tomtom/tlib_vim'
-Plug 'honza/vim-snippets'
-Plug 'garbas/vim-snipmate'
+" Plug 'MarcWeber/vim-addon-mw-utils'
+" Plug 'tomtom/tlib_vim'
+" Plug 'honza/vim-snippets'
+" Plug 'garbas/vim-snipmate'
 " Git/mercurial/others diff icons on the side of the file lines
 Plug 'mhinz/vim-signify'
 " Automatically sort python imports
 Plug 'fisadev/vim-isort'
-" Drag visual blocks arround
-Plug 'fisadev/dragvisuals.vim'
+" Drag virtual blocks around
+" Plug 'fisadev/dragvisuals.vim'
 " Window chooser
 Plug 't9md/vim-choosewin'
 " Python and other languages code checker
@@ -97,8 +97,8 @@ if has('python')
 endif
 " Relative numbering of lines (0 is the current line)
 " (disabled by default because is very intrusive and can't be easily toggled
-" on/off. When the plugin is present, will always activate the relative 
-" numbering every time you go to normal mode. Author refuses to add a setting 
+" on/off. When the plugin is present, will always activate the relative
+" numbering every time you go to normal mode. Author refuses to add a setting
 " to avoid that)
 " Plug 'myusuf3/numbers.vim'
 
@@ -113,6 +113,32 @@ Plug 'vim-scripts/Wombat'
 " Yank history navigation
 Plug 'vim-scripts/YankRing.vim'
 
+"Others
+" Plug 'gmarik/Vundle.vim' " let Vundle manage Vundle
+Plug 'wincent/command-t'
+Plug 'scrooloose/nerdtree'
+Plug 'lervag/vimtex'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'ryanoasis/vim-webdevicons'
+Plug 'ryanoasis/vim-devicons'
+" plugin for perl syntax, template toolkit
+Plug 'vim-perl/vim-perl'
+" display tag of class
+Plug 'majutsushi/tagbar'
+" HTML Syntax
+Plug 'othree/html5.vim'
+" Mojo html.ep
+Plug 'yko/mojo.vim'
+Plug 'valloric/youcompleteme'
+Plug 'godlygeek/tabular'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'klen/python-mode'
+Plug 'mbbill/undotree'
+Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'thaerkh/vim-workspace'
+Plug 'wannesm/wmgraphviz.vim'
 " Tell vim-plug we finished declaring plugins, so it can load them
 call plug#end()
 
@@ -163,8 +189,8 @@ set nu
 " tab navigation mappings
 map tn :tabn<CR>
 map tp :tabp<CR>
-map tm :tabm 
-map tt :tabnew 
+map tm :tabm
+map tt :tabnew
 map ts :tab split<CR>
 map <C-S-Right> :tabn<CR>
 imap <C-S-Right> <ESC>:tabn<CR>
@@ -193,7 +219,7 @@ set completeopt-=preview
 ca w!! w !sudo tee "%"
 
 " simple recursive grep
-nmap ,r :Ack 
+nmap ,r :Ack
 nmap ,wr :Ack <cword><CR>
 
 " use 256 colors when possible
@@ -241,14 +267,14 @@ endif
 " Plugins settings and mappings
 " Edit them as you wish.
 
-" Tagbar ----------------------------- 
+" Tagbar -----------------------------
 
 " toggle tagbar display
 map <F4> :TagbarToggle<CR>
 " autofocus on tagbar open
 let g:tagbar_autofocus = 1
 
-" NERDTree ----------------------------- 
+" NERDTree -----------------------------
 
 " toggle nerdtree display
 map <F3> :NERDTreeToggle<CR>
@@ -306,7 +332,7 @@ nmap <leader>e :Errors<CR>
 let g:syntastic_check_on_open = 1
 " don't put icons on the sign column (it hides the vcs status icons of signify)
 let g:syntastic_enable_signs = 0
-" custom icons (enable them if you use a patched font, and enable the previous 
+" custom icons (enable them if you use a patched font, and enable the previous
 " setting)
 "let g:syntastic_error_symbol = '✗'
 "let g:syntastic_warning_symbol = '⚠'
@@ -328,7 +354,7 @@ nmap ,D :tab split<CR>:call jedi#goto()<CR>
 " NeoComplCache ------------------------------
 
 " most of them not documented because I'm not sure how they work
-" (docs aren't good, had to do a lot of trial and error to make 
+" (docs aren't good, had to do a lot of trial and error to make
 " it play nice)
 let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_enable_ignore_case = 1
@@ -408,3 +434,6 @@ let g:airline#extensions#whitespace#enabled = 0
 "let g:airline_symbols.branch = '⭠'
 "let g:airline_symbols.readonly = '⭤'
 "let g:airline_symbols.linenr = '⭡'
+"
+
+colorscheme solarized
