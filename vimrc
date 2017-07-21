@@ -1,11 +1,11 @@
 set runtimepath+=~/.vim_runtime
 
-source ~/.vim_runtime/basic.vim
-source ~/.vim_runtime/filetypes.vim
-source ~/.vim_runtime/plugins_config.vim
-source ~/.vim_runtime/extended.vim
-source ~/.vim_runtime/fisa_vim_config.vim
-source ~/.vim_runtime/vundlesetup.vim
+source ~/.vim_runtime/vimrcs/basic.vim
+source ~/.vim_runtime/vimrcs/filetypes.vim
+source ~/.vim_runtime/vimrcs/plugins_config.vim
+source ~/.vim_runtime/vimrcs/extended.vim
+source ~/.vim_runtime/vimrcs/fisa_vim_config.vim
+" source ~/.vim_runtime/vimrcs/vundlesetup.vim
 
 try
 source ~/.vim_runtime/my_configs.vim
@@ -14,7 +14,8 @@ endtry
 
 
 set encoding=utf8
-set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Plus\ Nerd\ File\ Types\ 11
+"set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Plus\ Nerd\ File\ Types\ 11
+set guifont=Mononoki\ Nerd\ Font
 "
 " Web Dev Icons 
 "
@@ -48,35 +49,38 @@ let g:WebDevIconsNerdTreeAfterGlyphPadding = '  '
 let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
 
 let path='~/.vim/bundle'
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin(path)
+" ### To install vundle, uncomment these
+" set rtp+=~/.vim/bundle/Vundle.vim
+" call vundle#begin(path)
 "Plugin 'bling/vim-airline'
-Plugin 'gmarik/Vundle.vim' " let Vundle manage Vundle
-Plugin 'scrooloose/nerdtree'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'lervag/vimtex'
-Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'ryanoasis/vim-webdevicons'
-Plugin 'ryanoasis/vim-devicons'
+" Plugin 'gmarik/Vundle.vim' " let Vundle manage Vundle
+" Plugin 'wincent/command-t'
+" Plugin 'scrooloose/nerdtree'
+" Plugin 'vim-airline/vim-airline'
+" Plugin 'vim-airline/vim-airline-themes'
+" Plugin 'lervag/vimtex'
+" Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
+" Plugin 'Xuyuanp/nerdtree-git-plugin'
+" Plugin 'ryanoasis/vim-webdevicons'
+" Plugin 'ryanoasis/vim-devicons'
 " plugin for perl syntax, template toolkit
-Plugin 'vim-perl/vim-perl'
+" Plugin 'vim-perl/vim-perl'
 " display tag of class
-Plugin 'majutsushi/tagbar'
+" Plugin 'majutsushi/tagbar'
 " HTML Syntax
-Plugin 'othree/html5.vim'
+" Plugin 'othree/html5.vim'
 " Mojo html.ep
-Plugin 'yko/mojo.vim'
-Plugin 'valloric/youcompleteme'
-Plugin 'godlygeek/tabular'
-Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'terryma/vim-multiple-cursors'
-Plugin 'klen/python-mode'
-Plugin 'mbbill/undotree'
-Plugin 'octol/vim-cpp-enhanced-highlight'
-Plugin 'thaerkh/vim-workspace'
-call vundle#end()
+" Plugin 'yko/mojo.vim'
+" Plugin 'valloric/youcompleteme'
+" Plugin 'godlygeek/tabular'
+" Plugin 'nathanaelkane/vim-indent-guides'
+" Plugin 'terryma/vim-multiple-cursors'
+" Plugin 'klen/python-mode'
+" Plugin 'mbbill/undotree'
+" Plugin 'octol/vim-cpp-enhanced-highlight'
+" Plugin 'thaerkh/vim-workspace'
+" Plugin 'wannesm/wmgraphviz.vim'
+" call vundle#end()
 
 function! NERDTreeInitAsNeeded()
     redir => bufoutput
@@ -209,3 +213,7 @@ if has("persistent_undo")
     set undodir=~/.undodir/
     set undofile
 endif
+
+" The silver searcher  -- https://github.com/ggreer/the_silver_searcher
+let g:ackprg = 'ag --vimgrep'
+

