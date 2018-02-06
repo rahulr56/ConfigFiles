@@ -91,7 +91,8 @@ alias hlp='less ~/.bashrc_help'
 alias da='date "+%Y-%m-%d %A %T %Z"'
 
 # Alias's to modified commands
-alias cp='cp -iv'
+alias cp='cp -v'
+#alias cp='cp -iv'
 alias mv='mv -iv'
 #alias rm='rm -iv'
 alias rt='trash'
@@ -103,7 +104,7 @@ alias c='clear'
 alias pacman='sudo pacman'
 alias multitail='multitail --no-repeat -c'
 alias freshclam='sudo freshclam'
-alias vi='vim'
+alias vi='vim -u /etc/vimrc'
 alias svi='sudo vi'
 alias vis='vim "+set si"'
 
@@ -177,6 +178,7 @@ alias logs="sudo find /var/log -type f -exec file {} \; | grep 'text' | cut -d' 
 
 # SHA1
 alias sha1='openssl sha1'
+alias mamba='ssh rrachapa@mamba.urc.uncc.edu'
 
 #######################################################
 # SPECIAL FUNCTIONS
@@ -479,6 +481,8 @@ cpp()
 		echo
 	}
 alias pyt='rlwrap /usr/lib/python2.7/anaconda2/bin/python'
+alias conda_project='/usr/lib/python2.7/anaconda2/bin/anaconda-project'
+alias con='/usr/lib/python2.7/anaconda2/bin/anaconda'
 alias lc='/home/f4lc0n/.gem/ruby/2.4.0/bin/colorls  -sd'
 alias myip="/home/f4lc0n/Scripts/Shell/ipAddr.sh"
 # gem install colorls
@@ -533,4 +537,8 @@ alias top='htop'
 
 
 # Bash Bookmarks -- https://github.com/huyng/bashmarks
-source ~/.local/bin/bashmarks.sh
+source /home/f4lc0n/.local/bin/bashmarks.sh
+alias starwars='telnet towel.blinkenlights.nl'
+alias studio='/usr/local/share/android-studio/bin/studio.sh'
+# source /home/f4lc0n/.bash_command_timer.sh
+alias j='jobs'
