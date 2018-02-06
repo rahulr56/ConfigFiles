@@ -50,37 +50,37 @@ let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
 
 let path='~/.vim/bundle'
 " ### To install vundle, uncomment these
-" set rtp+=~/.vim/bundle/Vundle.vim
-" call vundle#begin(path)
+ set rtp+=~/.vim/bundle/Vundle.vim
+ call vundle#begin(path)
 "Plugin 'bling/vim-airline'
-" Plugin 'gmarik/Vundle.vim' " let Vundle manage Vundle
-" Plugin 'wincent/command-t'
-" Plugin 'scrooloose/nerdtree'
-" Plugin 'vim-airline/vim-airline'
-" Plugin 'vim-airline/vim-airline-themes'
-" Plugin 'lervag/vimtex'
-" Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
-" Plugin 'Xuyuanp/nerdtree-git-plugin'
-" Plugin 'ryanoasis/vim-webdevicons'
-" Plugin 'ryanoasis/vim-devicons'
+ Plugin 'gmarik/Vundle.vim' " let Vundle manage Vundle
+ Plugin 'wincent/command-t'
+ Plugin 'scrooloose/nerdtree'
+ Plugin 'vim-airline/vim-airline'
+ Plugin 'vim-airline/vim-airline-themes'
+ Plugin 'lervag/vimtex'
+ Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
+ Plugin 'Xuyuanp/nerdtree-git-plugin'
+ Plugin 'ryanoasis/vim-webdevicons'
+ Plugin 'ryanoasis/vim-devicons'
 " plugin for perl syntax, template toolkit
-" Plugin 'vim-perl/vim-perl'
+ Plugin 'vim-perl/vim-perl'
 " display tag of class
-" Plugin 'majutsushi/tagbar'
+ Plugin 'majutsushi/tagbar'
 " HTML Syntax
-" Plugin 'othree/html5.vim'
+ Plugin 'othree/html5.vim'
 " Mojo html.ep
-" Plugin 'yko/mojo.vim'
-" Plugin 'valloric/youcompleteme'
-" Plugin 'godlygeek/tabular'
-" Plugin 'nathanaelkane/vim-indent-guides'
-" Plugin 'terryma/vim-multiple-cursors'
-" Plugin 'klen/python-mode'
-" Plugin 'mbbill/undotree'
-" Plugin 'octol/vim-cpp-enhanced-highlight'
-" Plugin 'thaerkh/vim-workspace'
-" Plugin 'wannesm/wmgraphviz.vim'
-" call vundle#end()
+ Plugin 'yko/mojo.vim'
+ Plugin 'valloric/youcompleteme'
+ Plugin 'godlygeek/tabular'
+ Plugin 'nathanaelkane/vim-indent-guides'
+ Plugin 'terryma/vim-multiple-cursors'
+ Plugin 'klen/python-mode'
+ Plugin 'mbbill/undotree'
+ Plugin 'octol/vim-cpp-enhanced-highlight'
+ Plugin 'thaerkh/vim-workspace'
+ Plugin 'wannesm/wmgraphviz.vim'
+ call vundle#end()
 
 function! NERDTreeInitAsNeeded()
     redir => bufoutput
@@ -216,4 +216,3 @@ endif
 
 " The silver searcher  -- https://github.com/ggreer/the_silver_searcher
 let g:ackprg = 'ag --vimgrep'
-

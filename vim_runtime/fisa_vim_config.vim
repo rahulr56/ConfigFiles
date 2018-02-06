@@ -37,6 +37,7 @@ call plug#begin('~/.vim/plugged')
 " Plug 'arielrossanigo/dir-configs-override.vim'
 " Better file browser
 Plug 'scrooloose/nerdtree'
+Plug 'wannesm/wmgraphviz.vim'
 " Code commenter
 Plug 'scrooloose/nerdcommenter'
 " Class/module browser
@@ -112,11 +113,12 @@ Plug 'vim-scripts/matchit.zip'
 Plug 'vim-scripts/Wombat'
 " Yank history navigation
 Plug 'vim-scripts/YankRing.vim'
-
 "Others
 " Plug 'gmarik/Vundle.vim' " let Vundle manage Vundle
 Plug 'wincent/command-t'
 Plug 'scrooloose/nerdtree'
+Plug 'wannesm/wmgraphviz.vim'
+Plug 'easymotion/vim-easymotion'
 Plug 'lervag/vimtex'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'Xuyuanp/nerdtree-git-plugin'
@@ -138,7 +140,6 @@ Plug 'klen/python-mode'
 Plug 'mbbill/undotree'
 Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'thaerkh/vim-workspace'
-Plug 'wannesm/wmgraphviz.vim'
 " Tell vim-plug we finished declaring plugins, so it can load them
 call plug#end()
 
