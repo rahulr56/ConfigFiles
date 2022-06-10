@@ -224,18 +224,6 @@ nmap ,r :Ack
 nmap ,wr :Ack <cword><CR>
 
 " use 256 colors when possible
-if (&term =~? 'mlterm\|xterm\|xterm-256\|screen-256') || has('nvim')
-	let &t_Co = 256
-    colorscheme fisa
-else
-    colorscheme delek
-endif
-
-" colors for gvim
-if has('gui_running')
-    colorscheme wombat
-endif
-
 " when scrolling, keep cursor 3 lines away from screen border
 set scrolloff=3
 
@@ -438,3 +426,4 @@ let g:airline#extensions#whitespace#enabled = 0
 "
 
 colorscheme solarized
+

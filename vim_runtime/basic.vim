@@ -1,10 +1,4 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Maintainer: 
-"       Amir Salihefendic
-"       http://amix.dk - amix@amix.dk
-"
-" Version: 
-"       6.0 - 01/04/17 14:24:34 
 "
 " Blog_post: 
 "       http://amix.dk/blog/post/19691#The-ultimate-Vim-configuration-on-Github
@@ -15,27 +9,6 @@
 "       Install the awesome version from:
 "
 "           https://github.com/amix/vimrc
-"
-" Syntax_highlighted:
-"       http://amix.dk/vim/vimrc.html
-"
-" Raw_version: 
-"       http://amix.dk/vim/vimrc.txt
-"
-" Sections:
-"    -> General
-"    -> VIM user interface
-"    -> Colors and Fonts
-"    -> Files and backups
-"    -> Text, tab and indent related
-"    -> Visual mode related
-"    -> Moving around, tabs and buffers
-"    -> Status line
-"    -> Editing mappings
-"    -> vimgrep searching and cope displaying
-"    -> Spell checking
-"    -> Misc
-"    -> Helper functions
 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -131,12 +104,6 @@ set novisualbell
 set t_vb=
 set tm=500
 
-" Properly disable sound on errors on MacVim
-if has("gui_macvim")
-    autocmd GUIEnter * set vb t_vb=
-endif
-
-
 " Add a bit extra margin to the left
 set foldcolumn=1
 
@@ -152,20 +119,7 @@ if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
 
-try
-    colorscheme desert
-catch
-endtry
-
 set background=dark
-
-" Set extra options when running in GUI mode
-if has("gui_running")
-    set guioptions-=T
-    set guioptions-=e
-    set t_Co=256
-    set guitablabel=%M\ %t
-endif
 
 " Set utf8 as standard encoding and en_US as the standard language
 set encoding=utf8
@@ -193,6 +147,8 @@ set expandtab
 set smarttab
 set autoindent
 
+" show line numbers
+set nu
 
 " 1 tab == 4 spaces
 set shiftwidth=4
@@ -208,9 +164,12 @@ set si "Smart indent
 set wrap "Wrap lines
 set expandtab
 
+" when scrolling, keep cursor 3 lines away from screen border
 set scrolloff=3
 set showmode
 set showcmd
+" autocompletion of files and commands behaves like shell
+" (complete only the common part, list the options that match)
 set wildmode=list:longest,full
 set visualbell
 set ttyfast
@@ -220,6 +179,10 @@ nnoremap / /\v
 vnoremap / /\v
 set gdefault
 
+
+" Uncomment 2nd line below to enable better diff from version 8.1.36
+" set diffopt-=internal
+" set diffopt+=algorithm:patience
 """"""""""""""""""""""""""""""
 " => Visual mode related
 """"""""""""""""""""""""""""""
@@ -399,6 +362,29 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 nnoremap <C-j> <C-w>j
+" nnoremap <F5> "=strftime("%c")<CR>P
+inoremap <F5> <C-R>=strftime("%c")<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""
+" Relative line number toggle
+"""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <C-L><C-L> :set invrelativenumber<CR>
+
+augroup templates
+  au!
+  " read in template files
+  " autocmd BufNewFile *.* silent! execute '0r $HOME/.vim/templates/python_skeleton.'.expand("<afile>:e")
+  autocmd BufNewFile *.py silent! execute '0r $HOME/.vim/templates/python_skeleton.txt'
+  autocmd BufNewFile * %substitute#\[:VIM_EVAL:\]\(.\{-\}\)\[:END_EVAL:\]#\=eval(submatch(1))#ge
+augroup END
+
+" set colroscheme
+" color panda
+
+" Fold functions on opening using indent method by default
+set foldmethod=indent   
+" Avoid folding on file open
+setlocal foldlevelstart=5
 
 " Theme stuff
 "nnoremap <leader>1 :colorscheme obsidian<cr>
