@@ -1,0 +1,131 @@
+" Additional path to store vim files and plugins
+set runtimepath+=~/.vim_runtime
+source ~/.vim_runtime/vimrcs/vundlesetup.vim
+
+source ~/.vim_runtime/vimrcs/basic.vim
+source ~/.vim_runtime/vimrcs/filetypes.vim
+source ~/.vim_runtime/vimrcs/extended.vim
+source ~/.vim_runtime/vimrcs/plugins_config.vim
+
+
+set encoding=utf-8
+"set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Plus\ Nerd\ File\ Types\ 11
+" set guifont=Mononoki\ Nerd\ Font
+set guifont=Fira\ Code\ Light
+set backspace=indent,eol,start
+" Use local vimrc if available {
+    if filereadable(expand("~/.vimrc.local"))
+        source ~/.vimrc.local
+    endif
+" }
+function! InitializeDirectories()
+  let separator = "."
+  let parent = $HOME
+  let prefix = '.vim'
+  let dir_list = {
+			  \ 'backup': 'backupdir',
+			  \ 'views': 'viewdir',
+			  \ 'swap': 'directory',
+			  \ 'undo': 'undodir' }
+
+  for [dirname, settingname] in items(dir_list)
+	  let directory = parent . '/' . prefix . dirname . "/"
+	  if exists("*mkdir")
+		  if !isdirectory(directory)
+			  call mkdir(directory)
+		  endif
+	  endif
+	  if !isdirectory(directory)
+		  echo "Warning: Unable to create backup directory: " . directory
+		  echo "Try: mkdir -p " . directory
+	  else
+          let directory = substitute(directory, " ", "\\\\ ", "")
+          exec "set " . settingname . "=" . directory
+	  endif
+  endfor
+endfunction
+call InitializeDirectories()
+
+" you can add these colors to your .vimrc to help customizing
+let s:brown = "905532"
+let s:aqua =  "3AFFDB"
+let s:blue = "689FB6"
+let s:darkBlue = "44788E"
+let s:purple = "834F79"
+let s:lightPurple = "834F79"
+let s:red = "AE403F"
+let s:beige = "F5C06F"
+let s:yellow = "F09F17"
+let s:orange = "D4843E"
+let s:darkOrange = "F16529"
+let s:pink = "CB6F6F"
+let s:salmon = "EE6E73"
+let s:green = "8FAA54"
+let s:lightGreen = "31B53E"
+let s:white = "FFFFFF"
+let s:rspec_red = 'FE405F'
+let s:git_orange = 'F54D27'
+
+" Only do this part when compiled with support for autocommands.
+if has("autocmd")
+  augroup python_prog
+    au!
+    " sets shiftwidth to 4, tabstop to 4, and tells vim to expand tabs when you type them.
+    autocmd FileType python set ts=4 sw=4 expandtab nowrap
+  augroup end
+endif
+if has("persistent_undo")
+    set undodir=~/.undodir/
+    set undofile
+endif
+
+" The silver searcher  -- https://github.com/ggreer/the_silver_searcher
+let g:ackprg = 'ag --vimgrep'
+
+" Properly set backspace in vim
+inoremap <Char-0x07F> <BS>
+nnoremap <Char-0x07F> <BS>
+
+"================================================================="
+" ***** Autocmds ************************************************
+"================================================================="
+
+ " *****  Stuff for python *******
+    augroup py_filetype
+        au!
+        " Define folds by indentation and use space bar to toggle folds
+        autocmd FileType python set foldmethod=indent
+        autocmd FileType python set foldlevel=99
+        autocmd FileType python nnoremap <space> za
+        " Color whitespace at end of lines red.
+        autocmd FileType python syn match BadWhitespace /\s\+$/
+        autocmd FileType python highlight BadWhitespace ctermbg=red guibg=darkred
+        " Use F9 and F10 to execute the Python script that you're editing directly from Vim
+        autocmd FileType python nnoremap <buffer> <F9>  :exec '!python'    shellescape(@%, 1)<cr>
+        autocmd FileType python nnoremap <buffer> <F10> :exec '!python -i' shellescape(@%, 1)<cr>
+        " change "namemain" to "if __name__ == '__main__':"
+        autocmd FileType python iabbrev namemain if __name__ == '__main__':
+    augroup end
+
+ " *****  Format options are local to buffers, so setlocal must be used
+    autocmd FileType * setlocal formatoptions-=c formatoptions-=o
+" ***** End of Autocommands ************************************"================================================================="
+
+
+" **************** DIFF COLORS ********************
+hi x016_Grey0 ctermfg=16 guifg=#000000 "rgb=0,0,0
+hi x017_NavyBlue ctermfg=17 guifg=#00005f "rgb=0,0,95
+hi x018_DarkBlue ctermfg=18 guifg=#000087 "rgb=0,0,135
+hi x019_Blue3 ctermfg=19 guifg=#0000af "rgb=0,0,175
+hi x020_Blue3 ctermfg=20 guifg=#0000d7 "rgb=0,0,215
+hi x021_Blue1 ctermfg=21 guifg=#0000ff "rgb=0,0,255
+hi x022_DarkGreen ctermfg=22 guifg=#005f00 "rgb=0,95,0
+
+inoremap <C-e> <C-o>$
+
+" paste mode toggle (needed when using autoindent/smartindent)
+map <F10> :set paste<CR>
+map <F11> :set nopaste<CR>
+imap <F10> <C-O>:set paste<CR>
+
+set rtp+=~/.local/bin
