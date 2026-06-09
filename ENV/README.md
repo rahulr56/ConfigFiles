@@ -1,54 +1,54 @@
-# ENV — Portable Shell Environment                                                                                                    
-                                                                                                                                      
+# ENV — Portable Shell Environment
+
 Portable shell config for bash and zsh. Copy to any Linux machine, run one script, done.
-                                                                   
----                                              
-                                                                   
-## Structure                                  
-                                                                   
-```                                                                                                                                   
-ENV/                                                               
+
+---
+
+## Structure
+
+```
+ENV/
 ├── install.sh          # Installs tools + wires env.sh into shell rc
 ├── env.sh              # Entry point — auto-detects bash/zsh, sources rc/
-├── rc/                 # Bash modules                                                                                                
+├── rc/                 # Bash modules
 │   ├── 00-modules.sh   # Environment Modules (module load/avail/unload)
-│   ├── 01-path.sh      # PATH — ~/.local/bin, nvim, cargo, go, bob                                                                   
+│   ├── 01-path.sh      # PATH — ~/.local/bin, nvim, cargo, go, bob
 │   ├── 02-exports.sh   # EDITOR, TERM, LANG, history, shell opts, arrow-key search
 │   ├── 03-colors.sh    # LS_COLORS, LESS_TERMCAP, GREP_COLOR
 │   ├── 04-aliases.sh   # Navigation, ls, editor, git, system, python, dir stack
 │   ├── 05-fzf.sh       # FZF config + keybindings
-│   ├── 06-tools.sh     # bat, zoxide, ripgrep                     
+│   ├── 06-tools.sh     # bat, zoxide, ripgrep
 │   ├── 07-functions.sh # cd (autopushd+auto-venv), mcd, up, extract, backup, myip
-│   ├── 08-prompt.sh    # PS1: exit-code (jobs) (user:dir) ->                                                                         
+│   ├── 08-prompt.sh    # PS1: exit-code (jobs) (user:dir) ->
 │   └── 09-plugins.sh   # bash-preexec, REPORTTIME ≥5s, fastfetch on login
-└── zsh/                # Zsh mirrors of rc/ (zsh-native equivalents)                                                                 
-    ├── 00-modules.zsh                                             
-    ├── 01-path.zsh     # typeset -U path (auto-dedup)                                                                                
+└── zsh/                # Zsh mirrors of rc/ (zsh-native equivalents)
+    ├── 00-modules.zsh
+    ├── 01-path.zsh     # typeset -U path (auto-dedup)
     ├── 02-exports.zsh  # setopt equivalents, compinit, REPORTTIME, AUTO_PUSHD
-    ├── 03-colors.zsh                                              
-    ├── 04-aliases.zsh  # + numeric dir stack jumps (1-9)          
-    ├── 05-fzf.zsh                    
-    ├── 06-tools.zsh    # zoxide init zsh                          
-    ├── 07-functions.zsh                       
-    ├── 08-prompt.zsh   # precmd-based prompt (skipped if OMZ theme active)                                                           
-    ├── 09-plugins.zsh  # zsh-autosuggestions, zsh-syntax-highlighting, fastfetch                                                     
+    ├── 03-colors.zsh
+    ├── 04-aliases.zsh  # + numeric dir stack jumps (1-9)
+    ├── 05-fzf.zsh
+    ├── 06-tools.zsh    # zoxide init zsh
+    ├── 07-functions.zsh
+    ├── 08-prompt.zsh   # precmd-based prompt (skipped if OMZ theme active)
+    ├── 09-plugins.zsh  # zsh-autosuggestions, zsh-syntax-highlighting, fastfetch
     └── omz-config.zsh  # Oh My Zsh settings (theme, plugins) — sourced before OMZ
-```                                                                                                                                   
-                                                                                                                                      
----                                                     
-                                                                                                                                      
-## Quick Start                                           
-                                                                   
-### 1. Copy to new machine                      
-                                                                                                                                      
-```bash                                                            
-scp -r ~/ENV user@newmachine:~/ENV                                 
-```                                                                
-                                                                   
-Or clone if stored in git:                                         
-                                                                   
+```
+
+---
+
+## Quick Start
+
+### 1. Copy to new machine
+
 ```bash
-git clone <your-repo-url> ~/ENV                                                                                                                                                                                                                           16:12:29 [133/186]
+scp -r ~/ENV user@newmachine:~/ENV
+```
+
+Or clone if stored in git:
+
+```bash
+git clone https://github.com/rahulr56/ConfigFiles.git ~/ENV
 ```
 
 ### 2. Run installer
@@ -102,7 +102,7 @@ Installs all tools to `~/.local/bin` — **no sudo required**.
 | 17 | `nvim-update` | script to update Neovim (`nvim-update`) |
 | — | Oh My Zsh | if option 3 or 5 selected |
 
-Also:                                                                                                                                                                                                                                                      16:12:29 [79/186]
+Also:
 - Sets `nvim`/`vim` as default editor system-wide (`update-alternatives` or `alternatives`)
 - Sets `git config --global core.editor`
 - Appends `source ~/ENV/env.sh` to `~/.bashrc` and/or `~/.zshrc`
@@ -155,7 +155,7 @@ Re-run anytime — skips already-installed tools, updates outdated ones.
 | `fv` | fzf → open in nvim |
 | `myip` | public IP |
 | `localip` | LAN IP |
-| `serve` | python3 HTTP server on port 8000 |                                                                                                                                                                                                             16:12:29 [26/186]
+| `serve` | python3 HTTP server on port 8000 |
 | `topcpu` | top 10 CPU processes |
 | `colors` | show all 256 terminal colors |
 
@@ -192,7 +192,7 @@ extract  history  dirhistory
 ```zsh
 ZSH_THEME="agnoster"         # powerline-style
 ZSH_THEME="robbyrussell"     # default OMZ
-ZSH_THEME=""                 # use custom prompt from 08-prompt.zsh 
+ZSH_THEME=""                 # use custom prompt from 08-prompt.zsh
 ```
 
 **Notable OMZ extras:**
