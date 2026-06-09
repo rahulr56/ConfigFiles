@@ -1,14 +1,28 @@
 # Core exports: editor, terminal, history, shell options
 
-#--- Editor ---------------------------------------------------
+#--- Editor — set for every tool that respects these vars -----
+local _EDITOR_BIN=""
 if (( $+commands[nvim] )); then
-    export EDITOR=nvim
-    export VISUAL=nvim
-    export MANPAGER='nvim +Man!'
+    _EDITOR_BIN="$(command -v nvim)"
 elif (( $+commands[vim] )); then
-    export EDITOR=vim
-    export VISUAL=vim
+    _EDITOR_BIN="$(command -v vim)"
 fi
+
+if [[ -n "$_EDITOR_BIN" ]]; then
+    export EDITOR="$_EDITOR_BIN"
+    export VISUAL="$_EDITOR_BIN"
+    export SUDO_EDITOR="$_EDITOR_BIN"   # used by sudoedit / sudo -e
+    export GIT_EDITOR="$_EDITOR_BIN"    # overrides core.editor for this session
+    export SVN_EDITOR="$_EDITOR_BIN"
+    export HGEDITOR="$_EDITOR_BIN"
+    export FCEDIT="$_EDITOR_BIN"        # used by fc (history editing)
+    export CVSEDITOR="$_EDITOR_BIN"
+
+    if [[ "$_EDITOR_BIN" == *nvim* ]]; then
+        export MANPAGER='nvim +Man!'
+    fi
+fi
+unset _EDITOR_BIN
 
 #--- Terminal -------------------------------------------------
 export TERM=xterm-256color
@@ -41,8 +55,22 @@ setopt INTERACTIVE_COMMENTS    # allow # comments in interactive shell
 setopt GLOB_STAR_SHORT         # ** glob (globstar)
 setopt PROMPT_SUBST            # enable $(cmd) in PROMPT
 
-#--- Completion -----------------------------------------------
-autoload -Uz compinit && compinit
+# autopushd — every cd auto-pushes to dir stack (zoxide-compatible)
+setopt AUTO_PUSHD              # cd acts like pushd
+setopt PUSHD_IGNORE_DUPS       # no duplicate entries in stack
+setopt PUSHD_SILENT            # no stack printout on pushd/popd
+
+# Arrow key prefix history search
+bindkey '^[[A' history-search-backward 2>/dev/null
+bindkey '^[[B' history-search-forward  2>/dev/null
+
+# Report elapsed time for commands taking longer than N seconds
+REPORTTIME=5
+
+#--- Completion (skip if OMZ already ran compinit) ------------
+if [[ -z "$ZSH" ]]; then
+    autoload -Uz compinit && compinit
+fi
 
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'  # case-insensitive
 zstyle ':completion:*' menu select                     # arrow-key menu

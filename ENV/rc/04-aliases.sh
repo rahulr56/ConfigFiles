@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 # Aliases: navigation, ls, editor, git, system, python
 
+#--- Directory stack (autopushd via cd override in 07-functions.sh) ---
+alias pd='pushd'
+alias pp='popd'
+alias d='dirs -v | head -20'
+
 #--- Navigation -----------------------------------------------
 alias ..='cd ..'
 alias ...='cd ../..'

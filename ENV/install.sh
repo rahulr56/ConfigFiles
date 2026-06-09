@@ -250,7 +250,72 @@ else
 fi
 
 #================================================================
-# 12. vim-plug (for legacy Vim config)
+# 12. bash-preexec (preexec/precmd hooks for bash)
+#================================================================
+header "bash-preexec"
+PREEXEC_DIR="$HOME/.local/share/bash-preexec"
+PREEXEC_FILE="$PREEXEC_DIR/bash-preexec.sh"
+if [ -f "$PREEXEC_FILE" ]; then
+    info "bash-preexec already installed."
+else
+    info "Installing bash-preexec..."
+    mkdir -p "$PREEXEC_DIR"
+    curl -fsSL https://raw.githubusercontent.com/rcaloras/bash-preexec/master/bash-preexec.sh \
+        -o "$PREEXEC_FILE"
+    info "bash-preexec installed → $PREEXEC_FILE"
+fi
+
+#================================================================
+# 13. zsh plugins — autosuggestions + syntax-highlighting
+#================================================================
+header "zsh plugins"
+ZSH_PLUGINS="$HOME/.local/share/zsh/plugins"
+mkdir -p "$ZSH_PLUGINS"
+
+if [ -d "$ZSH_PLUGINS/zsh-autosuggestions" ]; then
+    info "zsh-autosuggestions already installed."
+else
+    info "Installing zsh-autosuggestions..."
+    git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions \
+        "$ZSH_PLUGINS/zsh-autosuggestions"
+    info "zsh-autosuggestions installed."
+fi
+
+if [ -d "$ZSH_PLUGINS/zsh-syntax-highlighting" ]; then
+    info "zsh-syntax-highlighting already installed."
+else
+    info "Installing zsh-syntax-highlighting..."
+    git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting \
+        "$ZSH_PLUGINS/zsh-syntax-highlighting"
+    info "zsh-syntax-highlighting installed."
+fi
+
+#================================================================
+# 14. fastfetch — system info on terminal open
+#================================================================
+header "fastfetch"
+FF_TAG=$(gh_latest fastfetch-cli/fastfetch)
+FF_VER="${FF_TAG#v}"
+
+if command -v fastfetch >/dev/null 2>&1 && fastfetch --version 2>/dev/null | grep -qF "$FF_VER"; then
+    info "fastfetch $FF_TAG already installed."
+else
+    info "Installing fastfetch $FF_TAG..."
+    FF_URL="https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-amd64.tar.gz"
+    if curl -fSL "$FF_URL" -o /tmp/fastfetch.tar.gz 2>/dev/null; then
+        tar -xzf /tmp/fastfetch.tar.gz -C /tmp/
+        cp /tmp/fastfetch-linux-amd64/usr/bin/fastfetch "$BIN/fastfetch" 2>/dev/null || \
+        find /tmp/fastfetch-* -name fastfetch -type f -exec cp {} "$BIN/fastfetch" \;
+        chmod +x "$BIN/fastfetch"
+        rm -rf /tmp/fastfetch.tar.gz /tmp/fastfetch-*/
+        info "fastfetch installed → $BIN/fastfetch"
+    else
+        warn "fastfetch download failed — install neofetch via package manager as fallback"
+    fi
+fi
+
+#================================================================
+# 15. vim-plug (for legacy Vim config)
 #================================================================
 header "vim-plug"
 PLUG="$HOME/.vim/autoload/plug.vim"
@@ -263,7 +328,7 @@ else
 fi
 
 #================================================================
-# 13. nvim-update helper script
+# 16. nvim-update helper script
 #================================================================
 header "nvim-update script"
 cat > "$BIN/nvim-update" << 'NVIMUPDATE'
@@ -286,7 +351,64 @@ chmod +x "$BIN/nvim-update"
 info "nvim-update script → $BIN/nvim-update"
 
 #================================================================
-# 14. Wire env.sh into shell rc file(s)
+# 17. Register nvim/vim as system default editor
+#================================================================
+header "System default editor"
+
+_EDITOR_BIN=""
+if [ -x "$BIN/nvim" ]; then
+    _EDITOR_BIN="$BIN/nvim"
+elif command -v nvim >/dev/null 2>&1; then
+    _EDITOR_BIN="$(command -v nvim)"
+elif command -v vim >/dev/null 2>&1; then
+    _EDITOR_BIN="$(command -v vim)"
+fi
+
+if [ -z "$_EDITOR_BIN" ]; then
+    warn "No nvim/vim found — skipping system editor registration."
+else
+    _EDITOR_NAME="$(basename "$_EDITOR_BIN")"
+    info "Registering $_EDITOR_BIN as system default editor..."
+
+    # Set git global editor (no sudo needed)
+    git config --global core.editor "$_EDITOR_BIN" 2>/dev/null && \
+        info "git config: core.editor = $_EDITOR_BIN"
+
+    # Debian/Ubuntu: update-alternatives
+    if command -v update-alternatives >/dev/null 2>&1; then
+        if sudo -n true 2>/dev/null; then
+            sudo update-alternatives --install /usr/bin/editor editor "$_EDITOR_BIN" 100
+            sudo update-alternatives --set editor "$_EDITOR_BIN"
+            info "update-alternatives: editor → $_EDITOR_BIN"
+        else
+            warn "sudo needed for update-alternatives — run manually:"
+            warn "  sudo update-alternatives --install /usr/bin/editor editor $_EDITOR_BIN 100"
+            warn "  sudo update-alternatives --set editor $_EDITOR_BIN"
+        fi
+
+    # RHEL/CentOS: alternatives
+    elif command -v alternatives >/dev/null 2>&1; then
+        if sudo -n true 2>/dev/null; then
+            sudo alternatives --install /usr/bin/editor editor "$_EDITOR_BIN" 100
+            sudo alternatives --set editor "$_EDITOR_BIN"
+            info "alternatives: editor → $_EDITOR_BIN"
+        else
+            warn "sudo needed for alternatives — run manually:"
+            warn "  sudo alternatives --install /usr/bin/editor editor $_EDITOR_BIN 100"
+            warn "  sudo alternatives --set editor $_EDITOR_BIN"
+        fi
+
+    else
+        # Fallback: symlink into ~/.local/bin so 'editor' resolves to nvim/vim
+        ln -sf "$_EDITOR_BIN" "$BIN/editor"
+        info "No alternatives system found — symlinked: $BIN/editor → $_EDITOR_BIN"
+    fi
+
+    unset _EDITOR_BIN _EDITOR_NAME
+fi
+
+#================================================================
+# 18. Wire env.sh into shell rc file(s)
 #================================================================
 header "Shell configuration"
 
@@ -313,29 +435,108 @@ ENVBLOCK
 
 # Determine which shells to configure
 if [ -n "${SHELL_TARGET:-}" ]; then
-    # Non-interactive: set SHELL_TARGET=bash|zsh|both before running
     TARGET="$SHELL_TARGET"
 else
     echo ""
     echo "Which shell(s) should use this config?"
     echo "  1) bash"
-    echo "  2) zsh"
-    echo "  3) both"
-    printf "Choice [1/2/3] (default: 1): "
+    echo "  2) zsh  (plain)"
+    echo "  3) zsh  + Oh My Zsh"
+    echo "  4) both (bash + zsh plain)"
+    echo "  5) both (bash + zsh + Oh My Zsh)"
+    printf "Choice [1-5] (default: 1): "
     read -r _choice
     case "${_choice:-1}" in
-        2) TARGET="zsh"  ;;
-        3) TARGET="both" ;;
-        *) TARGET="bash" ;;
+        2) TARGET="zsh"      ;;
+        3) TARGET="zsh-omz"  ;;
+        4) TARGET="both"     ;;
+        5) TARGET="both-omz" ;;
+        *) TARGET="bash"     ;;
     esac
 fi
 
+# Install Oh My Zsh if requested
+_install_omz() {
+    if [ -d "$HOME/.oh-my-zsh" ]; then
+        info "Oh My Zsh already installed."
+    else
+        info "Installing Oh My Zsh..."
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
+            "" --unattended --keep-zshrc
+        info "Oh My Zsh installed."
+    fi
+
+    # Clone zsh-users plugins into OMZ custom plugins dir
+    OMZ_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+    for plugin_repo in \
+        "zsh-users/zsh-autosuggestions" \
+        "zsh-users/zsh-syntax-highlighting"
+    do
+        plugin_name="${plugin_repo##*/}"
+        plugin_dir="$OMZ_CUSTOM/plugins/$plugin_name"
+        if [ -d "$plugin_dir" ]; then
+            info "$plugin_name already in OMZ custom plugins."
+        else
+            info "Cloning $plugin_name into OMZ custom plugins..."
+            git clone --depth=1 "https://github.com/$plugin_repo" "$plugin_dir"
+        fi
+    done
+}
+
+# Write zsh rc with OMZ block
+_wire_zsh_omz() {
+    local rc="$HOME/.zshrc"
+    local MARKER_OMZ="# dev-env OMZ (added by ENV/install.sh)"
+    local MARKER_ENV="# dev-env (added by ENV/install.sh)"
+    local OMZ_CONFIG="$SCRIPT_DIR/zsh/omz-config.zsh"
+
+    if grep -qF "$MARKER_OMZ" "$rc" 2>/dev/null; then
+        info "OMZ + env.sh already wired in ~/.zshrc"
+        return
+    fi
+
+    # Back up existing .zshrc if it has content
+    if [ -s "$rc" ]; then
+        cp "$rc" "${rc}.bak.$TIMESTAMP"
+        warn "Backed up existing ~/.zshrc to ${rc}.bak.$TIMESTAMP"
+    fi
+
+    cat >> "$rc" << ZSHOMZ
+
+$MARKER_OMZ
+# 1. Our OMZ settings (theme, plugins) — must come before OMZ loads
+[ -f "$OMZ_CONFIG" ] && source "$OMZ_CONFIG"
+
+# 2. Oh My Zsh
+export ZSH="\$HOME/.oh-my-zsh"
+[ -f "\$ZSH/oh-my-zsh.sh" ] && source "\$ZSH/oh-my-zsh.sh"
+
+# 3. Our customizations on top of OMZ
+$MARKER_ENV
+[ -f "$ENV_SH" ] && source "$ENV_SH"
+ZSHOMZ
+    info "Wired OMZ + env.sh into ~/.zshrc"
+}
+
 case "$TARGET" in
-    bash) _wire_shell "$HOME/.bashrc"  "bash" ;;
-    zsh)  _wire_shell "$HOME/.zshrc"   "zsh"  ;;
+    bash)
+        _wire_shell "$HOME/.bashrc" "bash"
+        ;;
+    zsh)
+        _wire_shell "$HOME/.zshrc" "zsh"
+        ;;
+    zsh-omz)
+        _install_omz
+        _wire_zsh_omz
+        ;;
     both)
         _wire_shell "$HOME/.bashrc" "bash"
         _wire_shell "$HOME/.zshrc"  "zsh"
+        ;;
+    both-omz)
+        _wire_shell "$HOME/.bashrc" "bash"
+        _install_omz
+        _wire_zsh_omz
         ;;
 esac
 
@@ -344,7 +545,7 @@ esac
 #================================================================
 echo ""
 echo -e "${BOLD}Installed tools:${NC}"
-for cmd in nvim rg fd fzf bat zoxide tldr cheat ctags stylua black ruff cpplint nvim-update; do
+for cmd in nvim rg fd fzf bat zoxide tldr cheat fastfetch ctags stylua black ruff cpplint nvim-update; do
     if command -v "$cmd" >/dev/null 2>&1 || [ -x "$BIN/$cmd" ]; then
         VER=$(PATH="$BIN:$PATH" "$cmd" --version 2>/dev/null | head -1 || echo "ok")
         printf "  %-14s %s\n" "$cmd" "$VER"

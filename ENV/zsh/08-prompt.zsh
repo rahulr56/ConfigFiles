@@ -1,5 +1,9 @@
 # Prompt — zsh equivalent of __setprompt from .bashrc.rrachapa
 # Shows: exit_code (jobs) (user:dir) ->
+# SKIPPED if OMZ is active with a theme (ZSH_THEME != "")
+# To use this prompt with OMZ: set ZSH_THEME="" in omz-config.zsh
+
+[[ -n "$ZSH" ]] && [[ -n "$ZSH_THEME" ]] && return
 
 autoload -Uz add-zsh-hook vcs_info
 

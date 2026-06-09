@@ -1,10 +1,37 @@
 # Shell functions (zsh)
 
-# cd — auto-ls after every directory change
-cd() { builtin cd "$@" && ls; }
+# _auto_venv — activate/deactivate python venv based on cwd
+_auto_venv() {
+    local found="" d
+    for d in venv .venv env .env; do
+        [[ -f "./$d/bin/activate" ]] && found="./$d/bin/activate" && break
+    done
+    if [[ -n "$found" ]]; then
+        [[ "$VIRTUAL_ENV" != "$(pwd)/$d" ]] && source "$found" && \
+            echo "[venv] activated: $found"
+    elif [[ -n "$VIRTUAL_ENV" ]]; then
+        deactivate 2>/dev/null && echo "[venv] deactivated"
+    fi
+}
+
+# cd — auto-ls + auto-venv (AUTO_PUSHD set in 02-exports.zsh handles stack)
+cd() { builtin cd "$@" && ls && _auto_venv; }
 
 # mcd — mkdir + cd
 mcd() { mkdir -p "$1" && cd "$1"; }
+
+# myip — public IP
+myip() {
+    curl -fsSL https://icanhazip.com 2>/dev/null || \
+    curl -fsSL https://api.ipify.org 2>/dev/null || \
+    dig +short myip.opendns.com @resolver1.opendns.com 2>/dev/null
+}
+
+# localip — LAN IP
+localip() {
+    ip route get 1.1.1.1 2>/dev/null | grep -oP 'src \K\S+' || \
+    hostname -I 2>/dev/null | awk '{print $1}'
+}
 
 # up N — go up N directories
 up() {

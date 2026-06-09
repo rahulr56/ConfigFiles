@@ -17,8 +17,9 @@ if [[ -n "$ZSH_VERSION" ]]; then
     source "$_D/04-aliases.zsh"   # Aliases: navigation, ls, editor, git, system, python
     source "$_D/05-fzf.zsh"       # FZF: default command, opts, zsh keybindings
     source "$_D/06-tools.zsh"     # Tools: bat, zoxide (zsh init), ripgrep smart-case
-    source "$_D/07-functions.zsh" # Functions: cd, mcd, up, extract, backup, ff, fv, colors
+    source "$_D/07-functions.zsh" # Functions: cd (auto-venv), mcd, up, extract, backup, ff, fv, myip, localip, colors
     source "$_D/08-prompt.zsh"    # Prompt: exit-code + jobs + user:dir -> (via precmd)
+    source "$_D/09-plugins.zsh"   # Plugins: zsh-autosuggestions, zsh-syntax-highlighting, neofetch/fastfetch on login
 
 elif [[ -n "$BASH_VERSION" ]]; then
     # ── bash ──────────────────────────────────────────────────
@@ -30,8 +31,9 @@ elif [[ -n "$BASH_VERSION" ]]; then
     source "$_D/04-aliases.sh"    # Aliases: navigation, ls, editor, git, system, python
     source "$_D/05-fzf.sh"        # FZF: default command, opts, bash keybindings
     source "$_D/06-tools.sh"      # Tools: bat, zoxide (bash init), ripgrep smart-case
-    source "$_D/07-functions.sh"  # Functions: cd, mcd, up, extract, backup, ff, fv, colors
+    source "$_D/07-functions.sh"  # Functions: cd (autopushd+auto-venv), mcd, up, extract, backup, ff, fv, myip, localip, colors
     source "$_D/08-prompt.sh"     # Prompt: exit-code + jobs + user:dir -> (via PROMPT_COMMAND)
+    source "$_D/09-plugins.sh"    # Plugins: bash-preexec, REPORTTIME (>=5s), neofetch/fastfetch on login
 
 else
     echo "[env.sh] Unknown shell — neither BASH_VERSION nor ZSH_VERSION set." >&2

@@ -1,6 +1,13 @@
 # Aliases: navigation, ls, editor, git, system, python
 # Identical to bash — aliases work the same in zsh
 
+#--- Directory stack (AUTO_PUSHD set in 02-exports.zsh) ------
+alias pd='pushd'
+alias pp='popd'
+alias d='dirs -v | head -20'
+# Jump to stack entry by number: '1', '2', etc.
+for i in {1..9}; do alias "$i"="cd +$i"; done
+
 #--- Navigation -----------------------------------------------
 alias ..='cd ..'
 alias ...='cd ../..'
