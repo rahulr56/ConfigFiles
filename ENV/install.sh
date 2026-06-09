@@ -286,23 +286,58 @@ chmod +x "$BIN/nvim-update"
 info "nvim-update script → $BIN/nvim-update"
 
 #================================================================
-# 14. Wire env.sh into ~/.bashrc
+# 14. Wire env.sh into shell rc file(s)
 #================================================================
-header "Hooking env.sh into ~/.bashrc"
-BASHRC="$HOME/.bashrc"
+header "Shell configuration"
+
 ENV_SH="$SCRIPT_DIR/env.sh"
 MARKER="# dev-env (added by ENV/install.sh)"
 
-if grep -qF "$MARKER" "$BASHRC" 2>/dev/null; then
-    info "env.sh already sourced in ~/.bashrc"
-else
-    cat >> "$BASHRC" << ENVBLOCK
+_wire_shell() {
+    local rc="$1" shell_name="$2"
+    if [ ! -f "$rc" ]; then
+        warn "$rc not found — skipping $shell_name"
+        return
+    fi
+    if grep -qF "$MARKER" "$rc" 2>/dev/null; then
+        info "env.sh already sourced in $rc"
+    else
+        cat >> "$rc" << ENVBLOCK
 
 $MARKER
 [ -f "$ENV_SH" ] && source "$ENV_SH"
 ENVBLOCK
-    info "Appended 'source $ENV_SH' to ~/.bashrc"
+        info "Appended 'source $ENV_SH' to $rc"
+    fi
+}
+
+# Determine which shells to configure
+if [ -n "${SHELL_TARGET:-}" ]; then
+    # Non-interactive: set SHELL_TARGET=bash|zsh|both before running
+    TARGET="$SHELL_TARGET"
+else
+    echo ""
+    echo "Which shell(s) should use this config?"
+    echo "  1) bash"
+    echo "  2) zsh"
+    echo "  3) both"
+    printf "Choice [1/2/3] (default: 1): "
+    read -r _choice
+    case "${_choice:-1}" in
+        2) TARGET="zsh"  ;;
+        3) TARGET="both" ;;
+        *) TARGET="bash" ;;
+    esac
 fi
+
+case "$TARGET" in
+    bash) _wire_shell "$HOME/.bashrc"  "bash" ;;
+    zsh)  _wire_shell "$HOME/.zshrc"   "zsh"  ;;
+    both)
+        _wire_shell "$HOME/.bashrc" "bash"
+        _wire_shell "$HOME/.zshrc"  "zsh"
+        ;;
+esac
 
 #================================================================
 # Summary
@@ -319,6 +354,10 @@ for cmd in nvim rg fd fzf bat zoxide tldr cheat ctags stylua black ruff cpplint 
 done
 
 echo ""
-echo "Run:  source ~/.bashrc      (activate env in current shell)"
-echo "Then: nvim-update          (update Neovim anytime)"
-echo "      tldr --update        (fetch tldr page cache)"
+case "$TARGET" in
+    bash) echo "Run: source ~/.bashrc" ;;
+    zsh)  echo "Run: source ~/.zshrc"  ;;
+    both) echo "Run: source ~/.bashrc   or   source ~/.zshrc" ;;
+esac
+echo "     nvim-update          (update Neovim anytime)"
+echo "     tldr --update        (fetch tldr page cache)"

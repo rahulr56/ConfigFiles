@@ -1,19 +1,40 @@
 #!/usr/bin/env bash
-# Shell environment entry point
-# Usage: echo 'source ~/ENV/env.sh' >> ~/.bashrc
+# Shell environment entry point — auto-detects bash or zsh
+# Usage: echo 'source ~/ENV/env.sh' >> ~/.bashrc   (bash)
+#        echo 'source ~/ENV/env.sh' >> ~/.zshrc    (zsh)
 #
-# Sources rc/ modules in order. Comment out any line to disable that module.
+# Comment out any line in the relevant section to disable that module.
 
-_ENV_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/rc"
+_ENV_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]:-${(%):-%x}}")" 2>/dev/null && pwd)"
 
-source "$_ENV_DIR/00-modules.sh"   # Environment Modules: enables 'module load/unload/avail' — tries common init paths (Lmod, TCL modules)
-source "$_ENV_DIR/01-path.sh"      # PATH: prepends ~/.local/bin, nvim, cargo, go, bob — user tools take precedence over system
-source "$_ENV_DIR/02-exports.sh"   # Exports: EDITOR=nvim, TERM, LANG, history (50k), shell opts (globstar, cdspell, direxpand), tab completion
-source "$_ENV_DIR/03-colors.sh"    # Colors: LS_COLORS (ls), LESS_TERMCAP (man pages), GREP_COLOR — all terminal color settings
-source "$_ENV_DIR/04-aliases.sh"   # Aliases: navigation (.. .3 .6), ls variants, editor (v/vi/vim/vd/vr), git (gs/gd/gl), system, python
-source "$_ENV_DIR/05-fzf.sh"       # FZF: default command (fd/rg), rich opts with colors/preview/multi-select, Ctrl-T/Ctrl-R keybindings
-source "$_ENV_DIR/06-tools.sh"     # Tools: bat (syntax cat, man pages), zoxide (z/zi smart cd), ripgrep smart-case
-source "$_ENV_DIR/07-functions.sh" # Functions: cd (auto-ls), mcd, up, extract, backup, ff, fv, path, serve, topcpu, colors
-source "$_ENV_DIR/08-prompt.sh"    # Prompt: PS1 showing exit-code + jobs + user:dir — mirrors __setprompt from .bashrc.rrachapa
+if [[ -n "$ZSH_VERSION" ]]; then
+    # ── zsh ───────────────────────────────────────────────────
+    _D="$_ENV_ROOT/zsh"
+    source "$_D/00-modules.zsh"   # Environment Modules: enables 'module load/unload/avail'
+    source "$_D/01-path.zsh"      # PATH: typeset -U, prepends ~/.local/bin nvim cargo go bob
+    source "$_D/02-exports.zsh"   # Exports: EDITOR, TERM, LANG, history, setopt, compinit
+    source "$_D/03-colors.zsh"    # Colors: LS_COLORS, LESS_TERMCAP, GREP_COLOR
+    source "$_D/04-aliases.zsh"   # Aliases: navigation, ls, editor, git, system, python
+    source "$_D/05-fzf.zsh"       # FZF: default command, opts, zsh keybindings
+    source "$_D/06-tools.zsh"     # Tools: bat, zoxide (zsh init), ripgrep smart-case
+    source "$_D/07-functions.zsh" # Functions: cd, mcd, up, extract, backup, ff, fv, colors
+    source "$_D/08-prompt.zsh"    # Prompt: exit-code + jobs + user:dir -> (via precmd)
 
-unset _ENV_DIR
+elif [[ -n "$BASH_VERSION" ]]; then
+    # ── bash ──────────────────────────────────────────────────
+    _D="$_ENV_ROOT/rc"
+    source "$_D/00-modules.sh"    # Environment Modules: enables 'module load/unload/avail'
+    source "$_D/01-path.sh"       # PATH: prepends ~/.local/bin nvim cargo go bob
+    source "$_D/02-exports.sh"    # Exports: EDITOR, TERM, LANG, history, shopt, bind
+    source "$_D/03-colors.sh"     # Colors: LS_COLORS, LESS_TERMCAP, GREP_COLOR
+    source "$_D/04-aliases.sh"    # Aliases: navigation, ls, editor, git, system, python
+    source "$_D/05-fzf.sh"        # FZF: default command, opts, bash keybindings
+    source "$_D/06-tools.sh"      # Tools: bat, zoxide (bash init), ripgrep smart-case
+    source "$_D/07-functions.sh"  # Functions: cd, mcd, up, extract, backup, ff, fv, colors
+    source "$_D/08-prompt.sh"     # Prompt: exit-code + jobs + user:dir -> (via PROMPT_COMMAND)
+
+else
+    echo "[env.sh] Unknown shell — neither BASH_VERSION nor ZSH_VERSION set." >&2
+fi
+
+unset _ENV_ROOT _D
