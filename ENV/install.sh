@@ -11,6 +11,8 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m'
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+
 
 info()  { echo -e "${GREEN}[install]${NC} $*"; }
 warn()  { echo -e "${YELLOW}[skip]${NC}   $*"; }
@@ -497,6 +499,7 @@ _wire_zsh_omz() {
 
     # Back up existing .zshrc if it has content
     if [ -s "$rc" ]; then
+        TIMESTAMP=$(date "+%Y_%m_%d__%H_%M_%S" )
         cp "$rc" "${rc}.bak.$TIMESTAMP"
         warn "Backed up existing ~/.zshrc to ${rc}.bak.$TIMESTAMP"
     fi
