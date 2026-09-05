@@ -7,9 +7,11 @@
 
 _ENV_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]:-${(%):-%x}}")" 2>/dev/null && pwd)"
 
+echo "ENV_ROOT : $_ENV_ROOT"
 if [[ -n "$ZSH_VERSION" ]]; then
     # ── zsh ───────────────────────────────────────────────────
     _D="$_ENV_ROOT/zsh"
+    echo "D : $_D"
     source "$_D/00-modules.zsh"   # Environment Modules: enables 'module load/unload/avail'
     source "$_D/01-path.zsh"      # PATH: typeset -U, prepends ~/.local/bin nvim cargo go bob
     source "$_D/02-exports.zsh"   # Exports: EDITOR, TERM, LANG, history, setopt, compinit
@@ -24,6 +26,7 @@ if [[ -n "$ZSH_VERSION" ]]; then
 elif [[ -n "$BASH_VERSION" ]]; then
     # ── bash ──────────────────────────────────────────────────
     _D="$_ENV_ROOT/rc"
+    echo "D : $_D"
     source "$_D/00-modules.sh"    # Environment Modules: enables 'module load/unload/avail'
     source "$_D/01-path.sh"       # PATH: prepends ~/.local/bin nvim cargo go bob
     source "$_D/02-exports.sh"    # Exports: EDITOR, TERM, LANG, history, shopt, bind

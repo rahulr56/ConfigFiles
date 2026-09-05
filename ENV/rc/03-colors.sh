@@ -15,7 +15,6 @@ export LESS_TERMCAP_us=$(printf '\e[04;33m')   # underline    - cyan
 export GROFF_NO_SGR=1
 
 #--- grep -----------------------------------------------------
-export GREP_COLOR='1;32'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
